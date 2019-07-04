@@ -1,123 +1,21 @@
-# Springboard-Project-1-Data-Wrangling-Exercise-Basic-Data-Manipulation
+# Springboard Project 1: Data Wrangling Exercise - Basic Data Manipulation
 
-# Loading R packages to be used
+This is my first data manipulation project from the Introduction to Data Science course at Springboard. It presents a toy data set showing product purchases from an electronics store. While the data set is small and simple, it illustrates many of the challenges in real-world data wrangling.
 
-library(tidyr)
-library(dplyr)
-library(readr)
-library(tibble)
+The exercise asks for seven items to be completed:
 
-# Step 1: Importing CSV file into RStudio, save data in data frame
+Step 0: Load the data as a CSV file into RStudio
 
-original_electronics_sales <- read_csv("refine_original.csv")
+Step 1: Clean up brand names - Clean up the 'company' column so all of the misspellings of the brand names are standardized. For example, you can transform the values in the column to be: philips, akzo, van houten and unilever (all lowercase).
 
-# Step 2: Clean brand names in column one so all four brand names have a standardized spelling and capitalization. Brands are: philips, akzo, van houten, and unilever
+Step 2: Separate product code and number - Separate the product code and product number into separate columns i.e. add two new columns called product_code and product_number, containing the product code and number respectively.
 
-original_electronics_sales <- original_electronics_sales %>%
-  mutate(company=recode(company,
-                        "Phillips"="philips",
-                        "philips"="philips",
-                        "phllips"="philips",
-                        "phillps"="philips",
-                        "phillipS"="philips",
-                        "fillips"="philips",
-                        "phlips"="philips",
-                        "phillips" = "philips",
-                        "Akzo"="akzo",
-                        "AKZO"="akzo",
-                        "akz0"="akzo",
-                        "ak zo"="akzo",
-                        "Van Houten"="van houten",
-                        "van Houten"="van houten",
-                        "unilver"="unilever",
-                        "Unilever"="unilever"))
+Step 3: Add product categories - You learn that the product codes actually represent the following product categories: p = Smartphone, v = TV, x = Laptop, and q = Tablet. In order to make the data more readable, add a column with the product category for each record.
 
-original_electronics_sales <- original_electronics_sales %>%
-  separate("Product code / number", c("product_code", "product_number"), "-")
+Step 4: Add full address for geocoding - You'd like to view the customer information on a map. In order to do that, the addresses need to be in a form that can be easily geocoded. Create a new column full_address that concatenates the three address fields (address, city, country), separated by commas.
 
-# Step 3: Each project code represents a unique category. The following code adds one column that lists the respective product category for each observation
-
-original_electronics_sales <- original_electronics_sales %>%
-  mutate(product_category = product_code) %>%
-  mutate(product_category = recode(product_category,
-                              "p" = "Smartphone",
-                              "v" = "TV",
-                              "x" = "Laptop",
-                              "q" = "Tablet"))
-
-# Step 4: In order to view the customer information on a map, the addresses need to be in a form that can be easily geocoded. The following code combines the three separate address columns into one, with each cell now separated by commas
-
-original_electronics_sales <- original_electronics_sales %>%
-  unite("full_address", "address", "city", "country", sep = ",")
-
-# Step 5: Both the company name and product category are categorical variables i.e. they take only a fixed set of values. In order to use them in further analysis I need to create dummy variables.
-
-original_electronics_sales <- original_electronics_sales %>%
-  mutate(company_philips = company) %>%
-    
-  mutate(company_philips = recode(company_philips,
-                              "philips" = 1,
-                              "akzo" = 0,
-                              "van houten" = 0,
-                              "unilever" = 0)) %>%
-    
-  mutate(company_akzo = company) %>%
-  
-  mutate(company_akzo = recode(company_akzo,
-                              "philips" = 0,
-                              "akzo" = 1,
-                              "van houten" = 0,
-                              "unilever" = 0)) %>%
-  
-  mutate(company_van_houten = company) %>%
-  
-  mutate(company_van_houten = recode(company_van_houten,
-                               "philips" = 0,
-                               "akzo" = 0,
-                               "van houten" = 1,
-                               "unilever" = 0)) %>%
-  
-  mutate(company_unilever = company) %>%
-  
-  mutate(company_unilever = recode(company_unilever,
-                               "philips" = 0,
-                               "akzo" = 0,
-                               "van houten" = 0,
-                               "unilever" = 1))
-
-original_electronics_sales <- original_electronics_sales %>%
-  mutate(product_smartphone = product_category) %>%
-  
-  mutate(product_smartphone = recode(product_smartphone,
-                              "Smartphone" = 1,
-                              "TV" = 0,
-                              "Laptop" = 0,
-                              "Tablet" = 0)) %>%
-  
-  mutate(product_tv = product_category) %>%
-  
-  mutate(product_tv = recode(product_tv,
-                              "Smartphone" = 0,
-                              "TV" = 1,
-                              "Laptop" = 0,
-                              "Tablet" = 0)) %>%
-  
-  mutate(product_laptop = product_category) %>%
-  
-  mutate(product_laptop = recode(product_laptop,
-                             "Smartphone" = 0,
-                             "TV" = 0,
-                             "Laptop" = 1,
-                             "Tablet" = 0)) %>%
-  
-  mutate(product_tablet = product_category) %>%
-  
-  mutate(product_tablet = recode(product_tablet,
-                              "Smartphone" = 0,
-                              "TV" = 0,
-                              "Laptop" = 0,
-                              "Tablet" = 1))
-
-# The final step is to save the cleaned data set into a new CSV file
-
-write.csv(original_electronics_sales, file = "refine_clean.csv", row.names = FALSE)
+Step 5: Create dummy variables for company and product category - Both the company name and product category are categorical variables i.e. they take only a fixed set of values. In order to use them in further analysis you need to create dummy variables. Create dummy binary variables for each of them with the prefix company_ and product_ i.e.:
+  1) Add four binary (1 or 0) columns for company: company_philips, company_akzo, company_van_houten and company_unilever.
+  2) Add four binary (1 or 0) columns for product category: product_smartphone, product_tv, product_laptop and product_tablet.
+ 
+ Step 6: Save the cleaned-up data as a new CSV file.
