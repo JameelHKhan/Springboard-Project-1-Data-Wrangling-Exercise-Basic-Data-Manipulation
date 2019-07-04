@@ -13,23 +13,23 @@ original_electronics_sales <- read_csv("refine_original.csv")
 # Brands are: philips, akzo, van houten, and unilever.
 
 original_electronics_sales <- original_electronics_sales %>%
-  mutate(company=recode(company,
-                        "Phillips"="philips",
-                        "philips"="philips",
-                        "phllips"="philips",
-                        "phillps"="philips",
-                        "phillipS"="philips",
-                        "fillips"="philips",
-                        "phlips"="philips",
+  mutate(company = recode(company,
+                        "Phillips" = "philips",
+                        "philips" = "philips",
+                        "phllips" = "philips",
+                        "phillps" = "philips",
+                        "phillipS" = "philips",
+                        "fillips" = "philips",
+                        "phlips" = "philips",
                         "phillips" = "philips",
-                        "Akzo"="akzo",
-                        "AKZO"="akzo",
-                        "akz0"="akzo",
-                        "ak zo"="akzo",
-                        "Van Houten"="van houten",
-                        "van Houten"="van houten",
-                        "unilver"="unilever",
-                        "Unilever"="unilever"))
+                        "Akzo" = "akzo",
+                        "AKZO" = "akzo",
+                        "akz0" = "akzo",
+                        "ak zo" = "akzo",
+                        "Van Houten" = "van houten",
+                        "van Houten" = "van houten",
+                        "unilver" = "unilever",
+                        "Unilever" = "unilever"))
 
 original_electronics_sales <- original_electronics_sales %>%
   separate("Product code / number", c("product_code", "product_number"), "-")
