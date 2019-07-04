@@ -1,15 +1,16 @@
-# Loading R packages to be used
+# Loading R packages to be used.
 
 library(tidyr)
 library(dplyr)
 library(readr)
 library(tibble)
 
-# Step 1: Importing CSV file into RStudio, save data in data frame
+# Step 1: Importing CSV file into RStudio, save data in data frame.
 
 original_electronics_sales <- read_csv("refine_original.csv")
 
-# Step 2: Clean brand names in column one so all four brand names have a standardized spelling and capitalization. Brands are: philips, akzo, van houten, and unilever
+# Step 2: Clean brand names in column one so all four brand names have a standardized spelling and capitalization.
+# Brands are: philips, akzo, van houten, and unilever.
 
 original_electronics_sales <- original_electronics_sales %>%
   mutate(company=recode(company,
@@ -33,7 +34,8 @@ original_electronics_sales <- original_electronics_sales %>%
 original_electronics_sales <- original_electronics_sales %>%
   separate("Product code / number", c("product_code", "product_number"), "-")
 
-# Step 3: Each project code represents a unique category. The following code adds one column that lists the respective product category for each observation
+# Step 3: Each project code represents a unique category. The following code adds one column that lists the respective product
+# category for each observation.
 
 original_electronics_sales <- original_electronics_sales %>%
   mutate(product_category = product_code) %>%
@@ -43,12 +45,14 @@ original_electronics_sales <- original_electronics_sales %>%
                               "x" = "Laptop",
                               "q" = "Tablet"))
 
-# Step 4: In order to view the customer information on a map, the addresses need to be in a form that can be easily geocoded. The following code combines the three separate address columns into one, with each cell now separated by commas
+# Step 4: In order to view the customer information on a map, the addresses need to be in a form that can be easily geocoded.
+# The following code combines the three separate address columns into one, with each cell now separated by commas.
 
 original_electronics_sales <- original_electronics_sales %>%
   unite("full_address", "address", "city", "country", sep = ",")
 
-# Step 5: Both the company name and product category are categorical variables i.e. they take only a fixed set of values. In order to use them in further analysis I need to create dummy variables.
+# Step 5: Both the company name and product category are categorical variables i.e. they take only a fixed set of values.
+# In order to use them in further analysis I need to create dummy variables.
 
 original_electronics_sales <- original_electronics_sales %>%
   mutate(company_philips = company) %>%
@@ -116,6 +120,6 @@ original_electronics_sales <- original_electronics_sales %>%
                               "Laptop" = 0,
                               "Tablet" = 1))
 
-# The final step is to save the cleaned data set into a new CSV file
+# The final step is to save the cleaned data set into a new CSV file.
 
 write.csv(original_electronics_sales, file = "refine_clean.csv", row.names = FALSE)
